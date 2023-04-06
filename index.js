@@ -1,16 +1,29 @@
-import http2 from 'http2'
+import http from 'http'
 import URL from 'url'
+
+import Colors, { colorLog } from "./util/colors.js"
 
 import routes from './config/routes.js'
 import ApplicationConfig from './config/application.js'
 
-const server = http2.createServer(async (req, res) => {
+const server = http.createServer(async (req, res) => {
+    colorLog(`Request received.`, Colors.fgGreen)
+
     const {pathname} = new URL.URL(req.url, `http://${req.headers.host}`)
     const method = req.method.toUpperCase()
     const action = routes().match(pathname, method)
 
+    console.log({
+        pathname: pathname,
+        method: method,
+        action: action
+    })
+
     if (!action) {
-        res.writeHead(404)
+        colorLog(`Action ${pathname} not found!`, Colors.fgRed)
+        res.writeHead(404, {
+            'content-type': 'application/json'
+        })
         res.end(JSON.stringify({error: 'Not found'}))
         return
     }
