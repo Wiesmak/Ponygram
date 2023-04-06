@@ -1,7 +1,17 @@
 {
-  "name": "InstaApp",
+  "name": "Ponygram",
+  "description": "Instagram clone for ponies",
+  "author": "Gerard Gajda",
   "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "dependencies": {
-    
+    "@types/node": "^18.15.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
