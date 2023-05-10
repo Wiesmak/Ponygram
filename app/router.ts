@@ -1,23 +1,47 @@
 import { createRequire } from 'module'
+import { VoidCallback } from "../util/types"
 
 const require = createRequire(import.meta.url)
 
+type Route = {
+    path: string
+    options?: RouteOptions
+    router?: Router
+}
+
+type RouteOptions = {
+    to?: string
+    as?: string
+}
+
+type ResourcesOptions = {
+    only?: ('index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy')[]
+}
+
+type RouteMatch = {
+    controller: string
+    action: string
+    params: { [key: string]: string }
+}
+
 export default class Router {
+    private routes: Route[]
+
     constructor() {
         this.routes = []
     }
 
-    get(path, options = {}) {
+    get(path: string, options: RouteOptions = {}): void {
         this.routes.push({path, options})
     }
 
-    namespace(path, callback) {
+    namespace(path: string, callback: VoidCallback): void {
         const router = new Router()
         callback.call(router)
         this.routes.push({path, router})
     }
 
-    resources(name, options = {}) {
+    resources(name: string, options: ResourcesOptions = {}): void {
         const { only = [] } = options
         const router = new Router()
         const includeAll = only.length === 0
@@ -33,7 +57,7 @@ export default class Router {
         this.routes.push({path: name, router})
     }
 
-    match(path, method) {
+    match(path: string, method: string): RouteMatch | null {
         for (const {path: routePath, router, options} of this.routes) {
             if (routePath === path && options && options.to && method === 'GET') {
                 const [controllerName, actionName] = options.to.split('#')

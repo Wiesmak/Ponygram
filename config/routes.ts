@@ -1,7 +1,7 @@
 import Router from "../app/router.js"
 
-export default function routes() {
-    const router = new Router()
+export default function routes(): Router {
+    const router: Router = new Router()
 
     router.namespace('api', () => {
         router.namespace('v1', () => {

@@ -1,12 +1,12 @@
-import http from 'http'
+import http, {IncomingMessage, ServerResponse} from 'http'
 import URL from 'url'
 
-import Colors, { colorLog } from "./util/colors.js"
+import Colors, { colorLog } from "./util/colors.ts"
 
 import routes from './config/routes.js'
-import ApplicationConfig from './config/application.js'
+import ApplicationConfig from './config/application.ts'
 
-const server = http.createServer(async (req, res) => {
+const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
     colorLog(`Request received.`, Colors.fgGreen)
 
     const {pathname} = new URL.URL(req.url, `http://${req.headers.host}`)
@@ -29,7 +29,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const {controller, action: actionName, params} = action
-    const ControllerClass = await import(`./app/controllers/${controller}.js`)
+    const ControllerClass = await import(`./app/controllers/${controller}.ts`)
     const controllerInstance = new ControllerClass.default(req, res, params)
     controllerInstance[actionName]()
 })

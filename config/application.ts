@@ -1,3 +1,3 @@
 export default class ApplicationConfig {
-  static PORT = 3000
+    static PORT: number = 3000
 }

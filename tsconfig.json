@@ -1,14 +1,27 @@
 {
   "compilerOptions": {
-    "module": "esNext",
-    "target": "esNext",
+    "module": "esnext",
+    "target": "esnext",
     "sourceMap": true,
     "allowJs": true,
     "checkJs": true,
+    "noEmit": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./@types", "./node_modules/@types"],
+    "typeRoots": ["./@types", "./node_modules/@types"]
   },
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "ts-node": {
+    "swc": true,
+    "esm": true,
+    "compilerOptions": {
+      "module": "esnext",
+      "target": "esnext",
+      "moduleResolution": "NodeNext",
+      "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
+      "typeRoots": ["./@types", "./node_modules/@types"],
+    }
+  }
 }
