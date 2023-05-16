@@ -3,74 +3,67 @@ import { VoidCallback } from "../util/types"
 
 const require = createRequire(import.meta.url)
 
-type Route = {
+interface Path {
     path: string
-    options?: RouteOptions
-    router?: Router
+    method?: string
+    routes?: Path[]
+}
+
+interface Namespace extends Path {
+    routes: Path[]
+}
+
+interface Route extends Path {
+    controller: string
+    action: string
+    method: string
 }
 
 type RouteOptions = {
-    to?: string
+    to: string
     as?: string
-}
-
-type ResourcesOptions = {
-    only?: ('index' | 'show' | 'new' | 'create' | 'edit' | 'update' | 'destroy')[]
 }
 
 type RouteMatch = {
     controller: string
     action: string
-    params: { [key: string]: string }
 }
 
 export default class Router {
-    private routes: Route[]
+    private routes: Path[] = []
 
-    constructor() {
-        this.routes = []
-    }
+    public namespace(path: string, callback: VoidCallback): void {}
 
-    get(path: string, options: RouteOptions = {}): void {
-        this.routes.push({path, options})
-    }
+    public resources (path: string, options: { only: string[] }): void {}
 
-    namespace(path: string, callback: VoidCallback): void {
-        const router = new Router()
-        callback.call(router)
-        this.routes.push({path, router})
-    }
-
-    resources(name: string, options: ResourcesOptions = {}): void {
-        const { only = [] } = options
-        const router = new Router()
-        const includeAll = only.length === 0
-
-        if (includeAll || only.includes('index')) {
-            router.get('', {to: `${name}#index`})
-        }
-
-        if (includeAll || only.includes('show')) {
-            router.get(':id', {to: `${name}#show`})
-        }
-
-        this.routes.push({path: name, router})
-    }
-
-    match(path: string, method: string): RouteMatch | null {
-        for (const {path: routePath, router, options} of this.routes) {
-            if (routePath === path && options && options.to && method === 'GET') {
-                const [controllerName, actionName] = options.to.split('#')
-                const controller = require(`../app/controllers/${controllerName}`)
-                return controller[actionName]
+    public get(path: string, options: RouteOptions): void {
+        if (options.to !== undefined) {
+            const [controller, action] = options.to.split('#')
+            const route: Route = {
+                path: options.as || path,
+                method: 'GET',
+                controller: controller,
+                action: action,
             }
-
-            if (path.startsWith(`${routePath}/`)) {
-                const subPath = path.substring(routePath.length)
-                return router.match(subPath, method)
-            }
-
-            return null
+            this.routes.push(route)
         }
+    }
+
+    public match(path: string, method: string): RouteMatch | null {
+        console.table(this.routes)
+
+        for (const route of this.routes) {
+            if (route.path === path && route.method === method) {
+                if (route.method !== undefined) {
+                    const match = route as Route
+                    return {
+                        controller: match.controller,
+                        action: match.action,
+                    }
+                }
+            }
+        }
+
+        return null
     }
 }
