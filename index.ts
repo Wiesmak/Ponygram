@@ -3,7 +3,7 @@ import URL from 'url'
 
 import Colors, { colorLog } from "./util/colors.ts"
 
-import routes from './config/routes.js'
+import routes from './config/routes.ts'
 import ApplicationConfig from './config/application.ts'
 
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
