@@ -20,7 +20,6 @@ import Colors, {colorLog} from "../util/colors.ts"
  */
 export default function routes(): Router {
     const router: Router = new Router()
-    colorLog(`GENERATING ROUTES TREE`, Colors.fgYellow)
 
     //region [ Routes ]
     router.namespace('api', () => {
@@ -32,7 +31,7 @@ export default function routes(): Router {
         router.post('login', {to: 'sessions#create', as: 'login'})
     })
 
-    router.get('profile', {to: 'users#show', as: 'profile'})
+    router.get('profile', {to: 'user#show', as: 'profile'})
     //endregion
 
     return router

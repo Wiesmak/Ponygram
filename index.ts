@@ -11,13 +11,11 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
 
     const {pathname} = new URL.URL(req.url, `http://${req.headers.host}`)
     const method = req.method.toUpperCase()
+    colorLog(`GENERATING ROUTES TREE`, Colors.fgYellow)
+    console.log('┌────────────── APP ROUTES TREE ───────────────┐')
     const action = routes().match(pathname, method)
-
-    console.log({
-        pathname: pathname,
-        method: method,
-        action: action
-    })
+    console.log('└──────────────────────────────────────────────┘')
+    colorLog(`ROUTES TREE GENERATED`, Colors.fgYellow)
 
     if (!action) {
         colorLog(`Action ${pathname} not found!`, Colors.fgRed)
@@ -28,7 +26,10 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
         return
     }
 
+    colorLog(`MATCH ${pathname} -> ${action.controller}#${action.action}`, Colors.fgGreen)
+
     const {controller, action: actionName, params} = action
+    // @ts-ignore
     const ControllerClass = await import(`./app/controllers/${controller}.ts`)
     const controllerInstance = new ControllerClass.default(req, res, params)
     controllerInstance[actionName]()

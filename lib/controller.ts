@@ -8,6 +8,19 @@ import {IncomingMessage, ServerResponse} from "http"
  */
 export default class Controller {
     /**
+     * Represents the respond method.
+     * @method respond
+     * @param {number} code - The HTTP response code.
+     * @param {string | object | undefined} body - The response body, which can be a string or an object.
+     * @param {object | undefined} headers - The additional headers to be included in the response.
+     * @returns {void}
+     * @example
+     * import('../util/respond.ts').then((module) => {
+     *     his.respond = module.default.bind(this)
+     * )
+     */
+    protected respond: (code: number, body?: string | object, headers?: object) => void
+    /**
      * Request object
      * @public
      * @type {IncomingMessage}
@@ -31,6 +44,9 @@ export default class Controller {
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.req = req
         this.res = res
+        import('../util/respond.ts').then((module) => {
+          this.respond = module.default.bind(this)
+        })
     }
 
     /**

@@ -6,9 +6,24 @@ const require = createRequire(import.meta.url)
 
 //region [ Interfaces ]
 /**
- * Route interface
- * @see {@link Action}
-*/
+ * Represents a route in an application.
+ * @interface Route
+ * @property {string} path - The path of the route.
+ * @property {string} method - The HTTP method associated with the route.
+ * @property {Route[]} routes - An array of sub-routes for the current route.
+ * @property {string | undefined} to - The destination of the route, if any.
+ * @remarks This interface is used only in {@link Router} class.
+ * @example
+ * const route: Route = {
+ *  path: '/api',
+ *  method: 'GET',
+ *  routes: [
+ *      { path: '/users', method: 'GET', routes: [], to: 'UserController.index' },
+ *      { path: '/users/:id', method: 'GET', routes: [], to: 'UserController.show' }
+ *  ]
+ * };
+ * @see Action
+ */
 interface Route {
     path: string
     method: string
@@ -17,17 +32,48 @@ interface Route {
 }
 
 /**
- * Action interface for matched routes
- * Generated from {@link Route.to} property
- * @see {@link Route}
+ * Represents an action matched by a route.
+ * @interface Action
+ * @extends Route
+ * @property {string} controller - The controller responsible for handling the action.
+ * @property {string} action - The name of the action within the controller.
+ * @property {object} params - Additional parameters for the action.
+ * @remarks This interface extends {@link Route} interface.
+ * @example
+ * const action: Action = {
+ *    path: '/api/users',
+ *    method: 'GET',
+ *    routes: [],
+ *    to: 'UserController.index',
+ *    controller: 'UserController',
+ *    action: 'index',
+ *    params: { sort: 'asc' }
+ *    };
+ * @see Router
  */
 interface Action extends Route {
     controller: string
     action: string
+    params: object
 }
 
 /**
- * Route options interface
+ * Represents options for a route.
+ * @interface RouteOptions
+ * @property {string | undefined} to - The destination of the route, if any.
+ * @property {string | undefined} as - An alias for the route, if any.
+ * @remarks This interface is used only in {@link Router} class.
+ * @example
+ * const options: RouteOptions = {
+ *     to: 'UserController.index',
+ *     as: 'userList'
+ * };
+ * const route: Route = {
+ *     path: '/api/users',
+ *     method: 'GET',
+ *     routes: [],
+ *     ...options
+ * };
  */
 interface RouteOptions {
     to?: string
@@ -35,7 +81,18 @@ interface RouteOptions {
 }
 
 /**
- * Resources options interface for {@link Router.resources} method
+ * Represents options for defining resource routes.
+ * @interface ResourcesOptions
+ * @property {string[]} only - An array of specific resource actions to include.
+ * @remarks
+ * The ResourcesOptions interface defines options for configuring resource routes.
+ * The only property is an array that specifies the specific resource actions to include.
+ * Valid values for only are 'index', 'show', 'create', 'update', 'destroy', 'new', and 'edit'.
+ * Each action should appear only once in the only array to avoid repetitions.
+ * @example
+ * const options: ResourcesOptions = {
+ *    only: ['index', 'show', 'create', 'update', 'destroy']
+ * };
  */
 interface ResourcesOptions {
     only: string[]
@@ -46,7 +103,16 @@ interface ResourcesOptions {
 /**
  * Router class meant for generating routes tree.
  * @remarks Used only in {@link routes} function
- * @class
+ * @class Router
+ * @property {Route[]} routes - A root array of routes.
+ * @property {string} currentNamespace - Temporary variable used when generating routes tree.
+ * @method {Route} namespace - Creates a new namespace for routes.
+ * @method {Route} resources - Creates a set of routes.
+ * @method {Route} get - Creates a new GET route.
+ * @method {Route} post - Creates a new POST route.
+ * @method {Route} put - Creates a new PUT route.
+ * @method {Route} patch - Creates a new PATCH route.
+ * @method {Route} delete - Creates a new DELETE route.
  * @see {@link routes}
  * @see {@link Route}
  */
@@ -71,9 +137,11 @@ export default class Router {
             const namespaceArr = this.currentNamespace.split('/')
             namespaceArr.forEach((namespace, index) => {
                 if (index == namespaceArr.length -1) {
-                    branch = '└───'
-                } else {
+                    branch += '    └───'
+                } else if (index == 0) {
                     branch = '│   '
+                } else {
+                    branch += '    '
                 }
             })
         } else {
@@ -84,7 +152,7 @@ export default class Router {
 
     /**
      * Adds route to routes tree
-     * @param {Route} route
+     * @param {Route} route - {@link Route} object to add
      * @see {@link Route}
      * @example
      * this.addRoute({ path: 'profile', method: 'GET', to: 'users#show' })
@@ -114,8 +182,8 @@ export default class Router {
     /**
      * Creates namespace for routes
      * @remarks Namespace is a way to group routes
-     * @param {string} path
-     * @param {VoidCallback} callback
+     * @param {string} path - Namespace path
+     * @param {VoidCallback} callback - Callback function with routes
      * @example
      * router.namespace('api', () => {
      *    router.namespace('v1', () => {
@@ -143,8 +211,8 @@ export default class Router {
      * @remarks This method can generate routes for index, show, create, update and destroy actions
      *
      * If no options are provided, all routes will be generated
-     * @param {string} path
-     * @param {ResourcesOptions} options
+     * @param {string} path - Routes path
+     * @param {ResourcesOptions} [options] - Options for routes generation ({@link ResourcesOptions.only})
      * @example Generates routes for index and show actions
      * router.resources('posts', { only: ['index', 'show'] })
      * @public
@@ -185,8 +253,8 @@ export default class Router {
     //region [ HTTP Methods ]
     /**
      * Creates GET route
-     * @param {string} path
-     * @param {RouteOptions} options
+     * @param {string} path - Request path
+     * @param {RouteOptions} options - Route options ({@link Route.to}, {@link Route.as})
      * @example
      * router.get('profile', {to: 'users#show', as: 'profile'})
      * @public
@@ -201,8 +269,8 @@ export default class Router {
 
     /**
      * Creates POST route
-     * @param {string} path
-     * @param {RouteOptions} options
+     * @param {string} path - Request path
+     * @param {RouteOptions} options - Route options ({@link Route.to}, {@link Route.as})
      * @example
      * router.post('login', {to: 'sessions#create', as: 'login'})
      * @public
@@ -217,8 +285,8 @@ export default class Router {
 
     /**
      * Creates PUT route
-     * @param {string} path
-     * @param {RouteOptions} options
+     * @param {string} path - Request path
+     * @param {RouteOptions} options - Route options ({@link Route.to}, {@link Route.as})
      * @example
      * router.put('profile', {to: 'users#update', as: 'profile'})
      * @public
@@ -232,8 +300,8 @@ export default class Router {
 
     /**
      * Creates PATCH route
-     * @param {string} path
-     * @param {RouteOptions} options
+     * @param {string} path - Request path
+     * @param {RouteOptions} options - Route options ({@link Route.to}, {@link Route.as})
      * @example
      * router.patch('profile', {to: 'users#update', as: 'profile'})
      * @public
@@ -247,8 +315,8 @@ export default class Router {
 
     /**
      * Creates DELETE route
-     * @param {string} path
-     * @param {RouteOptions} options
+     * @param {string} path - Request path
+     * @param {RouteOptions} options - Route options ({@link Route.to}, {@link Route.as})
      * @example
      * router.delete('profile', {to: 'users#destroy', as: 'profile'})
      * @public
@@ -265,19 +333,32 @@ export default class Router {
      *
      * Returns {@link Action} or null if no route was found
      * @remarks This method is used by server to match routes
-     * @param {string} path
-     * @param {string} method
+     * @param {string} path - Request path
+     * @param {string} method - Request method
      * @returns {Action | null}
      * @public
      * @see {@link Action}
      */
     public match(path: string, method: string): Action | null {
+        const pathParts = path.split('/').filter(part => part !== '')
+        let currentRoute: Route = null
 
-        for (const route of this.routes) {
-
+        for (const route of pathParts) {
+            currentRoute = currentRoute === null
+                ? this.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE') )
+                : currentRoute.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE'))
         }
 
-        return null
+        return currentRoute === null ? null : {
+            controller: currentRoute.to.split('#')[0],
+            action: currentRoute.to.split('#')[1],
+            params: currentRoute.path.split('/').filter(part => part !== '').map((part, index) => {
+                if (part.startsWith(':')) {
+                    return { name: part.slice(1), value: pathParts[index] }
+                }
+            }).filter(part => part !== undefined),
+            ...currentRoute
+        }
     }
     //endregion
 }
