@@ -5,7 +5,7 @@ export default class Photos extends Controller {
         this.respond(200, {message: 'Hello, world!'})
     }
 
-    public show() {
+    public show(id: string) {
         this.respond(200, {message: 'Hello, world!'})
     }
 }

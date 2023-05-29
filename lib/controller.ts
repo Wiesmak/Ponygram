@@ -1,13 +1,22 @@
 import {IncomingMessage, ServerResponse} from "http"
 import Colors, {colorLog} from "../util/colors.ts"
 
+export interface ControllerInterface {
+    index?(): void
+    show?(id: string): void
+    create?(): void
+    update?(id: string): void
+    destroy?(id: string): void
+}
+
 /**
  * Base controller class
  * @abstract
  * @class Controller
+ * @implements {ControllerInterface}
  * @see {@link Router}
  */
-export default class Controller {
+export default class Controller implements ControllerInterface {
     /**
      * Sets the response code and sends the response to the client.
      * @param code - The HTTP response code.
