@@ -1,5 +1,6 @@
-import { VoidCallback } from "../util/types.ts"
+import {UUID, VoidCallback} from "../util/types.ts"
 import Colors, {colorLog} from "../util/colors.ts"
+import Validate from "../util/validate.ts"
 
 //region [ Interfaces ]
 /**
@@ -52,6 +53,7 @@ interface Action extends Route {
     controller: string
     action: string
     params: object
+    id?: UUID
 }
 
 /**
@@ -339,8 +341,17 @@ export default class Router {
     public match(path: string, method: string): Action | null {
         const pathParts = path.split('/').filter(part => part !== '')
         let currentRoute: Route = null
-
+        let id: UUID = null
+        if (Validate.uuid(pathParts.at(-1))) {
+            id = pathParts.pop() as UUID
+        }
         for (const route of pathParts) {
+            if (id !== null && route === pathParts.at(-1)) {
+                currentRoute = currentRoute === null
+                    ? this.routes.find(r => r.path === `${route}/:id` && r.method === method)
+                    : currentRoute.routes.find(r => r.path === `${route}/:id` && r.method === method)
+                continue
+            }
             currentRoute = currentRoute === null
                 ? this.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE') )
                 : currentRoute.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE'))
@@ -354,6 +365,7 @@ export default class Router {
                     return { name: part.slice(1), value: pathParts[index] }
                 }
             }).filter(part => part !== undefined),
+            id,
             ...currentRoute
         }
     }

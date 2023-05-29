@@ -28,12 +28,12 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
 
     colorLog(`MATCH ${pathname} -> ${action.controller}#${action.action}`, Colors.fgGreen)
 
-    const {controller, action: actionName, params} = action
+    const {controller, action: actionName, params, id} = action
     try {
         // @ts-ignore
         const ControllerClass = await import(`./app/controllers/${controller}.ts`)
         const controllerInstance = new ControllerClass.default(req, res, params)
-        controllerInstance[actionName]()
+        id != null ? controllerInstance[actionName](id) : controllerInstance[actionName]()
     } catch (e) {
         colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
         console.error(e)
