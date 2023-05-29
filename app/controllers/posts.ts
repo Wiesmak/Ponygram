@@ -1,14 +1,13 @@
 import Controller from "../../lib/controller.ts"
 
-export default class User extends Controller {
+export default class Posts extends Controller {
 
     //declare private respond: (code: number, body?: string | object) => void
     public async index() {
-        this.respond(200, 'Hello from User#index')
+        this.respond(200, 'Hello from Posts#index')
     }
 
     public async show() {
-        this.status(200)
-        this.respond(200, 'Hello from User#index')
+        this.respond(200, 'Hello from Posts#show')
     }
 }

@@ -1,8 +1,5 @@
-import { createRequire } from 'module'
 import { VoidCallback } from "../util/types.ts"
 import Colors, {colorLog} from "../util/colors.ts"
-
-const require = createRequire(import.meta.url)
 
 //region [ Interfaces ]
 /**
@@ -349,7 +346,7 @@ export default class Router {
                 : currentRoute.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE'))
         }
 
-        return currentRoute === null ? null : {
+        return currentRoute == null ? null : {
             controller: currentRoute.to.split('#')[0],
             action: currentRoute.to.split('#')[1],
             params: currentRoute.path.split('/').filter(part => part !== '').map((part, index) => {

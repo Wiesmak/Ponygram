@@ -29,10 +29,19 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
     colorLog(`MATCH ${pathname} -> ${action.controller}#${action.action}`, Colors.fgGreen)
 
     const {controller, action: actionName, params} = action
-    // @ts-ignore
-    const ControllerClass = await import(`./app/controllers/${controller}.ts`)
-    const controllerInstance = new ControllerClass.default(req, res, params)
-    controllerInstance[actionName]()
+    try {
+        // @ts-ignore
+        const ControllerClass = await import(`./app/controllers/${controller}.ts`)
+        const controllerInstance = new ControllerClass.default(req, res, params)
+        controllerInstance[actionName]()
+    } catch (e) {
+        colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
+        console.error(e)
+        res.writeHead(500, {
+            'content-type': 'application/json'
+        })
+        res.end(JSON.stringify({error: 'Internal server error'}))
+    }
 })
 
 server.listen(ApplicationConfig.PORT, () => {

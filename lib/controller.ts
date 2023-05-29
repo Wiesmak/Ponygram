@@ -1,4 +1,5 @@
 import {IncomingMessage, ServerResponse} from "http"
+import Colors, {colorLog} from "../util/colors.ts"
 
 /**
  * Base controller class
@@ -8,18 +9,33 @@ import {IncomingMessage, ServerResponse} from "http"
  */
 export default class Controller {
     /**
-     * Represents the respond method.
-     * @method respond
-     * @param {number} code - The HTTP response code.
-     * @param {string | object | undefined} body - The response body, which can be a string or an object.
-     * @param {object | undefined} headers - The additional headers to be included in the response.
-     * @returns {void}
+     * Sets the response code and sends the response to the client.
+     * @param code - The HTTP response code.
+     * @param data - The data to be sent in the response body.
+     * @param headers - The additional headers to be included in the response.
+     * @remarks This function is overloaded to handle different variations of the respond method. The appropriate overload should be called based on the arguments provided. If data is a string, it will be wrapped in an object with a message property.
      * @example
-     * import('../util/respond.ts').then((module) => {
-     *     his.respond = module.default.bind(this)
-     * )
+     * // Set the response code to 200 and send a JSON response with the provided data
+     * respond(200, { message: 'Success' });
+     * // Set the response code to 400 and send a JSON response with an error message
+     * respond(400, 'Bad Request');
+     * // Set the response code to 200, include custom headers, and send a JSON response with the provided data
+     * respond(200, { message: 'Success' }, { 'X-Custom-Header': 'Value' });
      */
-    protected respond: (code: number, body?: string | object, headers?: object) => void
+    protected respond: {
+        (code: number): void
+        (code: number, data: object): void
+        (code: number, data: string): void
+        (code: number, data: object, headers: object): void
+    } = (code: number, data?: object | string, headers?: object) => {
+        this.res.statusCode = code
+        this.res.writeHead(code, {
+            ...(headers || {}),
+            'content-type': 'application/json'
+        })
+        colorLog(`RESPOND ${code} ${data}`, code === 200 ? Colors.fgGreen : Colors.fgRed)
+        this.res.end(JSON.stringify(typeof data === 'string' ? { message: data } : data))
+    }
     /**
      * Request object
      * @public
@@ -44,9 +60,6 @@ export default class Controller {
     constructor(req: IncomingMessage, res: ServerResponse) {
         this.req = req
         this.res = res
-        import('../util/respond.ts').then((module) => {
-          this.respond = module.default.bind(this)
-        })
     }
 
     /**

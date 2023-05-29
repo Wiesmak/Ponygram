@@ -1,5 +1,4 @@
 import Router from "../lib/router.ts"
-import Colors, {colorLog} from "../util/colors.ts"
 
 /**
  * Generates routes tree with Rails-like syntax
@@ -28,7 +27,7 @@ export default function routes(): Router {
         })
     })
     router.namespace('app', () => {
-        router.post('login', {to: 'sessions#create', as: 'login'})
+        router.post('login', {to: 'session#create', as: 'login'})
     })
 
     router.get('profile', {to: 'user#show', as: 'profile'})
