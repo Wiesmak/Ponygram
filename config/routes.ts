@@ -23,14 +23,9 @@ export default function routes(): Router {
     //region [ Routes ]
     router.namespace('api', () => {
         router.namespace('v1', () => {
-            router.resources('posts', { only: ['index', 'show'] })
+            router.resources('photos', { only: ['index', 'show'] })
         })
     })
-    router.namespace('app', () => {
-        router.post('login', {to: 'session#create', as: 'login'})
-    })
-
-    router.get('profile', {to: 'user#show', as: 'profile'})
     //endregion
 
     return router
