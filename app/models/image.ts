@@ -1,7 +1,7 @@
 import Model from "../../lib/model.ts"
 import {Status, UUID} from "../../util/types.ts"
 
-export default class Photo extends Model {
+export default class Image extends Model {
     constructor(
         public id: UUID,
         public album: string,

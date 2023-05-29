@@ -23,7 +23,7 @@ export default function routes(): Router {
     //region [ Routes ]
     router.namespace('api', () => {
         router.namespace('v1', () => {
-            router.resources('photos', { only: ['index', 'show'] })
+            router.resources('images', { only: ['index', 'show'] })
         })
     })
     //endregion

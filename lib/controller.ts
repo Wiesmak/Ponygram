@@ -1,5 +1,6 @@
 import {IncomingMessage, ServerResponse} from "http"
 import Colors, {colorLog} from "../util/colors.ts"
+import {Status} from "../util/status.ts"
 
 export interface ControllerInterface {
     index?(): void
@@ -32,11 +33,11 @@ export default class Controller implements ControllerInterface {
      * respond(200, { message: 'Success' }, { 'X-Custom-Header': 'Value' });
      */
     protected respond: {
-        (code: number): void
-        (code: number, data: object): void
-        (code: number, data: string): void
-        (code: number, data: object, headers: object): void
-    } = (code: number, data?: object | string, headers?: object) => {
+        (code: Status): void
+        (code: Status, data: object): void
+        (code: Status, data: string): void
+        (code: Status, data: object, headers: object): void
+    } = (code: Status, data?: object | string, headers?: object) => {
         this.res.statusCode = code
         this.res.writeHead(code, {
             ...(headers || {}),
