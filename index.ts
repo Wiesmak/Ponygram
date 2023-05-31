@@ -31,17 +31,17 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
     const {controller, action: actionName, params, id} = action
     try {
         // @ts-ignore
-        const ControllerClass = await import(`./app/controllers/${controller}.ts`)
+        const ControllerClass = await import(`./app/controllers/${controller[0].toUpperCase() + controller.slice(1)}Controller.ts`)
         const controllerInstance = new ControllerClass.default(req, res, params)
         id != null ? controllerInstance[actionName](id) : controllerInstance[actionName]()
     } catch (e) {
-        colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
-        console.error(e)
-        res.writeHead(500, {
-            'content-type': 'application/json'
-        })
-        res.end(JSON.stringify({error: 'Internal server error'}))
-    }
+    colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
+    console.error(e)
+    res.writeHead(500, {
+        'content-type': 'application/json'
+    })
+    res.end(JSON.stringify({error: 'Internal server error'}))
+}
 })
 
 server.listen(ApplicationConfig.PORT, () => {

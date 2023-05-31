@@ -1,6 +1,7 @@
 import {IncomingMessage, ServerResponse} from "http"
 import Colors, {colorLog} from "../util/colors.ts"
-import {Status} from "../util/status.ts"
+import Status from "../util/status.ts"
+import Model from "./model.ts"
 
 export interface ControllerInterface {
     index?(): void
@@ -16,8 +17,16 @@ export interface ControllerInterface {
  * @class Controller
  * @implements {ControllerInterface}
  * @see {@link Router}
+ * @see {@link Model}
+ * @example
+ * class ImagesController extends Controller {
+ *   public index() {
+ *      this.model = Image.all()
+ *      this.respond(Status.Ok, this.model)
+ *   }
+ * }
  */
-export default class Controller implements ControllerInterface {
+export default abstract class Controller implements ControllerInterface {
     /**
      * Sets the response code and sends the response to the client.
      * @param code - The HTTP response code.
@@ -52,15 +61,32 @@ export default class Controller implements ControllerInterface {
      * @type {IncomingMessage}
      * @memberof Controller
      */
-    public req: IncomingMessage
+    protected req: IncomingMessage
     /**
      * Response object
      * @public
      * @type {ServerResponse}
      * @memberof Controller
      */
-    public res: ServerResponse
-
+    protected res: ServerResponse
+    /**
+     * Entity model
+     * @remarks Model class must be extended from {@link Model}
+     * @protected
+     * @type {Model}
+     * @memberof Controller
+     * @see {@link Model}
+     * @example
+     * // Get all users
+     * this.model.all()
+     * // Create a new user
+     * this.model.create({name: 'John Doe'})
+     * // Find a user by id
+     * this.model.find(1)
+     * // Save a model to the database
+     * this.model.save()
+     */
+    protected model: Model
     /**
      * Creates an instance of Controller.
      * @constructor

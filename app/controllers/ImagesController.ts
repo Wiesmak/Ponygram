@@ -1,7 +1,7 @@
 import Controller from "../../lib/controller.ts"
-import {Status} from "../../util/status.ts"
+import Status from "../../util/status.ts"
 
-export default class Images extends Controller {
+export default class ImagesController extends Controller {
     public index() {
         this.respond(Status.Ok, {message: 'Hello, world!'})
     }

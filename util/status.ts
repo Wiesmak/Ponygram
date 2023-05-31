@@ -1,4 +1,4 @@
-export enum Status {
+enum Status {
     // 1xx Informational
     Continue = 100,
     SwitchingProtocols = 101,
@@ -70,3 +70,5 @@ export enum Status {
     NotExtended = 510,
     NetworkAuthenticationRequired = 511,
 }
+
+export default Status
