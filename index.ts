@@ -5,6 +5,9 @@ import Colors, { colorLog } from "./util/colors.ts"
 
 import routes from './config/routes.ts'
 import ApplicationConfig from './config/application.ts'
+import Database from "./lib/database.ts"
+
+export const db = (await Database.connect()).db()
 
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
     colorLog(`Request received.`, Colors.fgGreen)
@@ -35,13 +38,13 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
         const controllerInstance = new ControllerClass.default(req, res, params)
         id != null ? controllerInstance[actionName](id) : controllerInstance[actionName]()
     } catch (e) {
-    colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
-    console.error(e)
-    res.writeHead(500, {
-        'content-type': 'application/json'
-    })
-    res.end(JSON.stringify({error: 'Internal server error'}))
-}
+        colorLog(`Error while loading controller ${controller}!`, Colors.fgRed)
+        console.error(e)
+        res.writeHead(500, {
+            'content-type': 'application/json'
+        })
+        res.end(JSON.stringify({error: 'Internal server error'}))
+    }
 })
 
 server.listen(ApplicationConfig.PORT, () => {

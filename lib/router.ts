@@ -1,6 +1,7 @@
-import {UUID, VoidCallback} from "../util/types.ts"
+import {VoidCallback} from "../util/types.ts"
 import Colors, {colorLog} from "../util/colors.ts"
 import Validate from "../util/validate.ts"
+import {ObjectId} from "mongodb"
 
 //region [ Interfaces ]
 /**
@@ -53,7 +54,7 @@ interface Action extends Route {
     controller: string
     action: string
     params: object
-    id?: UUID
+    id?: ObjectId
 }
 
 /**
@@ -341,9 +342,9 @@ export default class Router {
     public match(path: string, method: string): Action | null {
         const pathParts = path.split('/').filter(part => part !== '')
         let currentRoute: Route = null
-        let id: UUID = null
-        if (Validate.uuid(pathParts.at(-1))) {
-            id = pathParts.pop() as UUID
+        let id: ObjectId = null
+        if (Validate.objectId(pathParts.at(-1))) {
+            id = pathParts.pop() as ObjectId
         }
         for (const route of pathParts) {
             if (id !== null && route === pathParts.at(-1)) {

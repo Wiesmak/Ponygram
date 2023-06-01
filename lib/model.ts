@@ -1,4 +1,4 @@
-import {UUID} from "../util/types.ts"
+import {Collection, InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
 /**
  * Base class for all models
@@ -9,7 +9,7 @@ import {UUID} from "../util/types.ts"
  * @example
  * class User extends Model {
  *    constructor(
- *      public id: UUID,
+ *      public id: ObjectId,
  *      public username: string,
  *      public password: string,
  *    ) {
@@ -18,7 +18,7 @@ import {UUID} from "../util/types.ts"
  *    public static save(user: User): void {
  *      // ...
  *    }
- *    public static find(id: UUID): User {
+ *    public static find(id: ObjectId): User {
  *      // ...
  *    }
  *    public static all(): User[] {
@@ -29,15 +29,15 @@ import {UUID} from "../util/types.ts"
 export default abstract class Model {
     /**
      * Creates an instance of Model.
-     * @param {UUID} id - The unique identifier for the model.
+     * @param {ObjectId} id - The unique identifier for the model.
      * @remarks This constructor is protected and should not be called directly.
      * @param id
      * @protected
      * @memberof Model
      */
-    protected constructor(public id: UUID) {}
+    protected constructor(public id?: ObjectId) {}
 
-    public static save(): void {
+    protected abstract collection: Collection
 
-    }
+    public abstract save(): Promise<UpdateResult<Document> | InsertOneResult<Document>>
 }

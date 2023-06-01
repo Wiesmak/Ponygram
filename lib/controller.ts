@@ -52,7 +52,7 @@ export default abstract class Controller implements ControllerInterface {
             ...(headers || {}),
             'content-type': 'application/json'
         })
-        colorLog(`RESPOND ${code} ${data}`, code === 200 ? Colors.fgGreen : Colors.fgRed)
+        colorLog(`RESPOND ${code} ${data}`, (code >= 200 && code <= 208) ? Colors.fgGreen : Colors.fgRed)
         this.res.end(JSON.stringify(typeof data === 'string' ? { message: data } : data))
     }
     /**
@@ -106,5 +106,24 @@ export default abstract class Controller implements ControllerInterface {
      */
     protected status(code: number): void {
         this.res.statusCode = code
+    }
+
+    protected parseBody(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let body = ''
+            this.req.on('data', (chunk) => {
+                body += chunk.toString()
+            })
+            this.req.on('end', () => {
+                try {
+                    resolve(JSON.parse(body))
+                } catch (err) {
+                    reject(err)
+                }
+            })
+            this.req.on('error', (err) => {
+                reject(err)
+            })
+        })
     }
 }

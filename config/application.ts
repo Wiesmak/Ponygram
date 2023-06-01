@@ -41,10 +41,10 @@ export default class ApplicationConfig {
      * }
      */
     static DATABASE: DatabaseConfig = {
-        host: 'localhost',
+        host: '127.0.0.1',
         port: 27017,
-        user: 'rainbow',
-        password: 'dash',
-        database: 'Ponygram'
+        user: null,
+        password: null,
+        database: 'ponygram'
     }
 }
