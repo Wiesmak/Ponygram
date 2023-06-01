@@ -2,13 +2,14 @@ import {IncomingMessage, ServerResponse} from "http"
 import Colors, {colorLog} from "../util/colors.ts"
 import Status from "../util/status.ts"
 import Model from "./model.ts"
+import {ObjectId} from "mongodb"
 
 export interface ControllerInterface {
     index?(): void
-    show?(id: string): void
+    show?(id: ObjectId): void
     create?(): void
-    update?(id: string): void
-    destroy?(id: string): void
+    update?(id: ObjectId): void
+    destroy?(id: ObjectId): void
 }
 
 /**

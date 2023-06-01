@@ -26,4 +26,9 @@ export default class Image extends Model {
                 {upsert: !!(await this.collection.findOne({_id: this.id}))}
             ) : await db.collection('images').insertOne(entity)
     }
+
+    public static async find(id: ObjectId): Promise<Image> {
+        const entity = await db.collection('images').findOne({_id: id})
+        return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id) : null
+    }
 }
