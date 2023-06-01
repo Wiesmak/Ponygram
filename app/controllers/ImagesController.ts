@@ -6,8 +6,15 @@ import {InsertOneResult, ObjectId} from "mongodb"
 export default class ImagesController extends Controller {
     protected model: Image
 
-    public index() {
-        this.respond(Status.Ok, {message: 'Hello, world!'})
+    public async index() {
+        const images = await Image.all()
+        this.respond(
+            Status.Ok,
+            images.map(image => {
+                const {collection, ...entity} = image
+                return entity
+            }) ?? []
+        )
     }
 
     public async show(id: ObjectId) {

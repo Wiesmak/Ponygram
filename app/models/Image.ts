@@ -32,6 +32,11 @@ export default class Image extends Model {
         return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id) : null
     }
 
+    public static async all(): Promise<Image[]> {
+        const entities = await db.collection('images').find().toArray()
+        return entities.map(entity => new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id))
+    }
+
     public async destroy(): Promise<boolean> {
         const result = await this.collection.deleteOne({_id: this.id})
         return !!result.deletedCount
