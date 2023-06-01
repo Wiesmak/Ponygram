@@ -1,5 +1,5 @@
 import Model from "../../lib/model.ts"
-import {Status} from "../../util/types.ts"
+import {History, Status} from "../../util/types.ts"
 import {InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 import {db} from "../../index.ts"
 
@@ -10,8 +10,8 @@ export default class Image extends Model {
         public album: string,
         public originalName: string,
         public url: string,
-        public lastChange: Status,
-        public history: Status[],
+        public lastChange?: Status,
+        public history?: History[],
         public id?: ObjectId
     ) {
         super(id)
