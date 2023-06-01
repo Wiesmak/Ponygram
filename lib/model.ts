@@ -40,4 +40,6 @@ export default abstract class Model {
     protected abstract collection: Collection
 
     public abstract save(): Promise<UpdateResult<Document> | InsertOneResult<Document>>
+
+    public abstract destroy(): Promise<boolean>
 }

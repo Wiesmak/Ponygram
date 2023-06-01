@@ -31,4 +31,9 @@ export default class Image extends Model {
         const entity = await db.collection('images').findOne({_id: id})
         return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id) : null
     }
+
+    public async destroy(): Promise<boolean> {
+        const result = await this.collection.deleteOne({_id: this.id})
+        return !!result.deletedCount
+    }
 }

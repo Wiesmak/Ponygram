@@ -42,4 +42,14 @@ export default class ImagesController extends Controller {
             this.respond(Status.NotFound, {message: `Image ${id} not found`})
         }
     }
+
+    public async destroy(id: ObjectId) {
+        this.model = await Image.find(id)
+        if (this.model) {
+            await this.model.destroy()
+            this.respond(Status.Ok, {message: `Deleted image ${id}`})
+        } else {
+            this.respond(Status.NotFound, {message: `Image ${id} not found`})
+        }
+    }
 }
