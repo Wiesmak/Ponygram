@@ -39,7 +39,18 @@ export default abstract class Model {
 
     protected abstract collection: Collection
 
-    public abstract save(): Promise<UpdateResult<Document> | InsertOneResult<Document>>
+    public async save(): Promise<UpdateResult<Document> | InsertOneResult<Document>> {
+        const {id, collection, ...entity} = this
+        return this.id
+            ? await this.collection.updateOne(
+                {_id: this.id},
+                {$set: entity},
+                {upsert: !!(await this.collection.findOne({_id: this.id}))}
+            ) : await this.collection.insertOne(entity)
+    }
 
-    public abstract destroy(): Promise<boolean>
+    public async destroy(): Promise<boolean> {
+        const result = await this.collection.deleteOne({_id: this.id})
+        return !!result.deletedCount
+    }
 }

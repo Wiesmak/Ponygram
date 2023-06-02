@@ -17,16 +17,6 @@ export default class Image extends Model {
         super(id)
     }
 
-    public async save(): Promise<UpdateResult<Document> | InsertOneResult<Document>> {
-        const {id, collection, ...entity} = this
-        return this.id
-            ? await this.collection.updateOne(
-                {_id: this.id},
-                {$set: entity},
-                {upsert: !!(await this.collection.findOne({_id: this.id}))}
-            ) : await db.collection('images').insertOne(entity)
-    }
-
     public static async find(id: ObjectId): Promise<Image> {
         const entity = await db.collection('images').findOne({_id: id})
         return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id) : null
@@ -35,10 +25,5 @@ export default class Image extends Model {
     public static async all(): Promise<Image[]> {
         const entities = await db.collection('images').find().toArray()
         return entities.map(entity => new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id))
-    }
-
-    public async destroy(): Promise<boolean> {
-        const result = await this.collection.deleteOne({_id: this.id})
-        return !!result.deletedCount
     }
 }

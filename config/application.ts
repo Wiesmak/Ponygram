@@ -20,7 +20,7 @@ export default class ApplicationConfig {
      * static PORT: number = 3000
      * @remarks This property is static and should be set before application start.
      */
-    static PORT: number = 3000
+    static PORT: number = 16320
 
     /**
      * Database configuration
