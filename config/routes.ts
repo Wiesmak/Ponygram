@@ -22,10 +22,14 @@ export default function routes(): Router {
 
     //region [ Routes ]
     router.namespace('api', () => {
-        router.namespace('v1', () => {
-            router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+        router.resources('tags', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+
+        router.get('taglist', { to: 'tags#raw', as: 'taglist' })
+
+        router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+
+        router.namespace('images', () => {
             router.resources('tags', { only: ['index', 'show', 'create', 'update', 'destroy'] })
-            router.get('taglist', { to: 'tags#raw', as: 'taglist' })
         })
     })
     //endregion
