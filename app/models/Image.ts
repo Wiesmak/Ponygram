@@ -1,6 +1,6 @@
 import Model from "../../lib/model.ts"
-import {History, Status} from "../../util/types.ts"
-import {InsertOneResult, ObjectId, UpdateResult} from "mongodb"
+import {History, Status, Tag} from "../../util/types.ts"
+import {ObjectId} from "mongodb"
 import {db} from "../../index.ts"
 
 export default class Image extends Model {
@@ -12,6 +12,7 @@ export default class Image extends Model {
         public url: string,
         public lastChange?: Status,
         public history?: History[],
+        public tags: Tag[] = [],
         public id?: ObjectId
     ) {
         super(id)
@@ -19,11 +20,11 @@ export default class Image extends Model {
 
     public static async find(id: ObjectId): Promise<Image> {
         const entity = await db.collection('images').findOne({_id: id})
-        return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id) : null
+        return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity.tags, entity._id) : null
     }
 
     public static async all(): Promise<Image[]> {
         const entities = await db.collection('images').find().toArray()
-        return entities.map(entity => new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity._id))
+        return entities.map(entity => new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity.tags, entity._id))
     }
 }

@@ -26,10 +26,13 @@ export default function routes(): Router {
 
         router.get('taglist', { to: 'tags#raw', as: 'taglist' })
 
+        router.patch('tags/:id', { to: 'tags#update', as: 'tags' })
+
         router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
 
-        router.namespace('images', () => {
-            router.resources('tags', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+        router.namespace('photos', () => {
+            router.patch('tags/:id', { to: 'imageTags#replace', as: 'imageTags' })
+            router.resources('imageTags', { only: ['show', 'create', 'update', 'destroy'], as: 'tags' })
         })
     })
     //endregion

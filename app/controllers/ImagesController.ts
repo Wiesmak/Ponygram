@@ -49,6 +49,7 @@ export default class ImagesController extends Controller {
             this.model.album = body.album || this.model.album
             this.model.originalName = body.originalName || this.model.originalName
             this.model.url = body.url || this.model.url
+            this.model.tags = body.tags ?? this.model.tags
             this.model.lastChange = this.model.lastChange === "original" ? "modified-1" : `modified-${parseInt(this.model.lastChange.split("-")[1]) + 1}` as `modified-${number}`
             this.model.history = [
                 ...this.model.history,

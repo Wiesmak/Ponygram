@@ -96,6 +96,7 @@ interface RouteOptions {
  */
 interface ResourcesOptions {
     only: string[]
+    as?: string
 }
 //endregion
 
@@ -225,25 +226,25 @@ export default class Router {
             options.only.forEach(action => {
                 switch (action) {
                     case 'index':
-                        this.addRoute({ path, method: 'GET', routes: [], to: `${path}#index` })
+                        this.addRoute({ path: options.as ?? path, method: 'GET', routes: [], to: `${path}#index` })
                         break
                     case 'show':
-                        this.addRoute({ path: `${path}/:id`, method: 'GET', routes: [], to: `${path}#show` })
+                        this.addRoute({ path: `${options.as ?? path}/:id`, method: 'GET', routes: [], to: `${path}#show` })
                         break
                     case 'create':
-                        this.addRoute({ path, method: 'POST', routes: [], to: `${path}#create` })
+                        this.addRoute({ path: options.as ?? path, method: 'POST', routes: [], to: `${path}#create` })
                         break
                     case 'update':
-                        this.addRoute({ path: `${path}/:id`, method: 'PUT', routes: [], to: `${path}#update` })
+                        this.addRoute({ path: `${options.as ?? path}/:id`, method: 'PUT', routes: [], to: `${path}#update` })
                         break
                     case 'destroy':
-                        this.addRoute({ path: `${path}/:id`, method: 'DELETE', routes: [], to: `${path}#destroy` })
+                        this.addRoute({ path: `${options.as ?? path}/:id`, method: 'DELETE', routes: [], to: `${path}#destroy` })
                         break
                     case 'new':
-                        this.addRoute({ path: `${path}/new`, method: 'GET', routes: [], to: `${path}#new` })
+                        this.addRoute({ path: `${options.as ?? path}/new`, method: 'GET', routes: [], to: `${path}#new` })
                         break
                     case 'edit':
-                        this.addRoute({ path: `${path}/:id/edit`, method: 'GET', routes: [], to: `${path}#edit` })
+                        this.addRoute({ path: `${options.as ?? path}/:id/edit`, method: 'GET', routes: [], to: `${path}#edit` })
                         break
                 }
             })

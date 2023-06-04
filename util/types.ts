@@ -11,6 +11,10 @@ export type History = {
     timestamp: Timestamp
 }
 
+export type Tag = {
+    name: string
+}
+
 /**
  * Database configuration
  * @interface DatabaseConfig
