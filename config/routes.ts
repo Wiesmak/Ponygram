@@ -30,10 +30,16 @@ export default function routes(): Router {
 
         router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
 
+        router.resources('filters', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+
         router.namespace('photos', () => {
             router.patch('tags/:id', { to: 'imageTags#replace', as: 'imageTags' })
             router.resources('imageTags', { only: ['show', 'create', 'update', 'destroy'], as: 'tags' })
         })
+    })
+
+    router.namespace('files', () => {
+        router.post('upload', { to: 'files#upload' })
     })
     //endregion
 

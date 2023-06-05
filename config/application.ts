@@ -22,6 +22,8 @@ export default class ApplicationConfig {
      */
     static PORT: number = 16320
 
+    static FILE_STORAGE: string = './data/'
+
     /**
      * Database configuration
      * @remarks Set mongodb database configuration using {@link DatabaseConfig} interface.

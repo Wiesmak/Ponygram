@@ -127,4 +127,38 @@ export default abstract class Controller implements ControllerInterface {
             })
         })
     }
+
+    protected parseFile(): Promise<Buffer> {
+        return new Promise<Buffer>((resolve, reject) => {
+            const chunks: Buffer[] = []
+            this.req.on('data', (chunk) => {
+                chunks.push(chunk)
+            })
+            this.req.on('end', () => {
+                try {
+                    const fileData = Buffer.concat(chunks)
+                    resolve(fileData)
+                } catch (err) {
+                    reject(err)
+                }
+            })
+            this.req.on('error', (err) => {
+                reject(err)
+            })
+        })
+    }
+
+    protected parseFileName(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const disposition = this.req.headers['content-disposition']
+            if (disposition) {
+                const match = disposition.match(/filename="(.+)"/)
+                if (match) {
+                    resolve(match[1])
+                } else {
+                    reject('No filename provided')
+                }
+            }
+        })
+    }
 }

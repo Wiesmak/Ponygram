@@ -354,7 +354,7 @@ export default class Router {
                     : currentRoute.routes.find(r => r.path === `${route}/:id` && r.method === method)
                 continue
             }
-            currentRoute = currentRoute === null
+            currentRoute = currentRoute == null
                 ? this.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE') )
                 : currentRoute.routes.find(r => r.path === route && (r.method === method || r.method === 'NAMESPACE'))
         }
