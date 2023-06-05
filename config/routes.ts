@@ -31,6 +31,12 @@ export default function routes(): Router {
         router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
         router.patch('images/:id', { to: 'images#filter', as: 'images' })
 
+        router.get('profile', { to: 'profiles#show' })
+        router.patch('profile', { to: 'profiles#update' })
+        router.post('profile', { to: 'profiles#updatePicture' })
+
+        router.get('picture', { to: 'profiles#getPicture' })
+
         router.namespace('user', () => {
             router.post('register', { to: 'users#create', as: 'register' })
             router.post('login', { to: 'users#login', as: 'login' })

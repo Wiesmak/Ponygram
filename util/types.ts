@@ -4,6 +4,8 @@ export type VoidCallback = () => void
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`
 
+export type TokenPayload = { id: string, username: string, email: string, confirmed: boolean }
+
 export type Filter = "rotate" | "resize" | "grayscale" | "blur" | "sharpen" | "reformat" | "crop" | "flip" | "negate" | "tint"
 
 export type Status = "original" | `modified-${number}` | Filter

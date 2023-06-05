@@ -16,7 +16,7 @@ export default class UsersController extends Controller {
             this.respond(Status.Conflict, {error: 'Email already exists'})
         } else {
             const hash = await Hash.encrypt(body.password)
-            this.model = new User(body.username, body.email, hash, null)
+            this.model = new User(body.username, body.email, hash, null, null)
             await this.model.save()
             const {password, collection, ...user} = this.model
             this.respond(Status.Created, user)
