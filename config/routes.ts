@@ -31,7 +31,11 @@ export default function routes(): Router {
         router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
         router.patch('images/:id', { to: 'images#filter', as: 'images' })
 
-        router.resources('filters', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+        router.namespace('user', () => {
+            router.post('register', { to: 'users#create', as: 'register' })
+            router.post('login', { to: 'users#login', as: 'login' })
+            router.post('confirm', { to: 'users#confirm', as: 'confirm' })
+        })
 
         router.namespace('photos', () => {
             router.get('metadata/:id', { to: 'images#metadata', as: 'metadata' })

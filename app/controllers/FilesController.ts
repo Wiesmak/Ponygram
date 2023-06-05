@@ -3,8 +3,10 @@ import File from "../models/File.ts"
 import Status from "../../util/status.ts"
 import {ObjectId} from "mongodb"
 import Image from "../models/Image.ts"
+import Authenticate from "../../lib/authenticate.ts"
 
 export default class FilesController extends Controller {
+    @Authenticate()
     public async upload() {
         const file = await File.parse(this.req)
         try {
@@ -19,6 +21,7 @@ export default class FilesController extends Controller {
         }
     }
 
+    @Authenticate()
     public async download(id: ObjectId) {
         try {
             const type = await this.parseFileExtension()

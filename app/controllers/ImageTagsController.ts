@@ -2,9 +2,12 @@ import Controller from "../../lib/controller.ts"
 import ImageTag from "../models/ImageTag.ts"
 import {ObjectId} from "mongodb"
 import Status from "../../util/status.ts"
+import Authenticate from "../../lib/authenticate.ts"
 
 export default class ImageTagsController extends Controller {
     protected model: ImageTag
+
+    @Authenticate()
     public async show(id: ObjectId) {
         this.model = await ImageTag.find(id)
         const {collection, ...entity} = this.model
@@ -23,6 +26,7 @@ export default class ImageTagsController extends Controller {
         }
     }
 
+    @Authenticate()
     public async replace(id: ObjectId) {
         this.model = await ImageTag.find(id)
         const body = await this.parseBody()
@@ -35,6 +39,7 @@ export default class ImageTagsController extends Controller {
         }
     }
 
+    @Authenticate()
     public async update(id: ObjectId) {
         this.model = await ImageTag.find(id)
         const body = await this.parseBody()
@@ -47,6 +52,7 @@ export default class ImageTagsController extends Controller {
         }
     }
 
+    @Authenticate()
     public async destroy(id: ObjectId) {
         this.model = await ImageTag.find(id)
         if (this.model) {

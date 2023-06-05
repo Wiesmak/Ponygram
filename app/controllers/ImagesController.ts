@@ -6,10 +6,12 @@ import Timestamp from "../../lib/timestamp.ts"
 import sharp from "sharp"
 import ApplicationConfig from "../../config/application.ts"
 import {Filter} from "../../util/types"
+import Authenticate from "../../lib/authenticate.ts"
 
 export default class ImagesController extends Controller {
     protected model: Image
 
+    @Authenticate()
     public async index() {
         const images = await Image.all()
         this.respond(
@@ -21,6 +23,7 @@ export default class ImagesController extends Controller {
         )
     }
 
+    @Authenticate()
     public async show(id: ObjectId) {
         this.model = await Image.find(id)
         const {collection, ...entity} = this.model
@@ -31,6 +34,7 @@ export default class ImagesController extends Controller {
         }
     }
 
+    @Authenticate()
     public async create() {
         const body = await this.parseBody()
         this.model = new Image(body.album, body.originalName, null, "original",
@@ -49,6 +53,7 @@ export default class ImagesController extends Controller {
         this.respond(Status.Created, {message: `Created image ${result.insertedId}`})
     }
 
+    @Authenticate()
     public async update(id: ObjectId) {
         const body = await this.parseBody()
         this.model = await Image.find(id)
@@ -71,6 +76,7 @@ export default class ImagesController extends Controller {
         }
     }
 
+    @Authenticate()
     public async destroy(id: ObjectId) {
         this.model = await Image.find(id)
         if (this.model) {
@@ -81,6 +87,7 @@ export default class ImagesController extends Controller {
         }
     }
 
+    @Authenticate()
     public async metadata(id: ObjectId) {
         try {
             this.model = await Image.find(id)
@@ -95,6 +102,7 @@ export default class ImagesController extends Controller {
         }
     }
 
+    @Authenticate()
     public async filter(id: ObjectId) {
         const body = await this.parseBody()
         const filter: Filter = body.filter

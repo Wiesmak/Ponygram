@@ -2,10 +2,12 @@ import Controller from "../../lib/controller.ts"
 import Tag from "../models/Tag.ts"
 import Status from "../../util/status.ts"
 import {InsertOneResult, ObjectId, UpdateResult} from "mongodb"
+import Authenticate from "../../lib/authenticate.ts"
 
 export default class TagsController extends Controller {
     protected model: Tag
 
+    @Authenticate()
     public async index() {
         const tags = await Tag.all()
         this.respond(
@@ -17,6 +19,7 @@ export default class TagsController extends Controller {
         )
     }
 
+    @Authenticate()
     public async show(id: ObjectId) {
         this.model = await Tag.find(id)
         const {collection, ...entity} = this.model
@@ -27,11 +30,13 @@ export default class TagsController extends Controller {
         }
     }
 
+    @Authenticate()
     public async raw() {
         const tags = await Tag.all()
         this.respond(Status.Ok, tags.map( tag => tag.name) ?? [])
     }
 
+    @Authenticate()
     public async create() {
         const body = await this.parseBody()
         const found = await Tag.find(body.name)
@@ -48,6 +53,7 @@ export default class TagsController extends Controller {
         }
     }
 
+    @Authenticate()
     public async delete(id: ObjectId) {
         this.model = await Tag.find(id)
         if (this.model) {

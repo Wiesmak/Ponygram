@@ -24,6 +24,8 @@ export default class ApplicationConfig {
 
     static FILE_STORAGE: string = './data/'
 
+    static SECRET_KEY: string = 'ponies'
+
     /**
      * Database configuration
      * @remarks Set mongodb database configuration using {@link DatabaseConfig} interface.

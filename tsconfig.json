@@ -21,7 +21,7 @@
       "moduleResolution": "NodeNext",
       "allowSyntheticDefaultImports": true,
       "experimentalDecorators": true,
-      "typeRoots": ["./@types", "./node_modules/@types"],
+      "typeRoots": ["./@types", "./node_modules/@types"]
     }
   }
 }
