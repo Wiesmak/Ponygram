@@ -4,7 +4,9 @@ export type VoidCallback = () => void
 
 export type UUID = `${string}-${string}-${string}-${string}-${string}`
 
-export type Status = "original" | `modified-${number}`
+export type Filter = "rotate" | "resize" | "grayscale" | "blur" | "sharpen" | "reformat" | "crop" | "flip" | "negate" | "tint"
+
+export type Status = "original" | `modified-${number}` | Filter
 
 export type History = {
     status: Status

@@ -29,10 +29,12 @@ export default function routes(): Router {
         router.patch('tags/:id', { to: 'tags#update', as: 'tags' })
 
         router.resources('images', { only: ['index', 'show', 'create', 'update', 'destroy'] })
+        router.patch('images/:id', { to: 'images#filter', as: 'images' })
 
         router.resources('filters', { only: ['index', 'show', 'create', 'update', 'destroy'] })
 
         router.namespace('photos', () => {
+            router.get('metadata/:id', { to: 'images#metadata', as: 'metadata' })
             router.patch('tags/:id', { to: 'imageTags#replace', as: 'imageTags' })
             router.resources('imageTags', { only: ['show', 'create', 'update', 'destroy'], as: 'tags' })
         })

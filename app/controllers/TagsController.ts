@@ -1,7 +1,7 @@
 import Controller from "../../lib/controller.ts"
 import Tag from "../models/Tag.ts"
 import Status from "../../util/status.ts"
-import {InsertOneResult, ObjectId} from "mongodb"
+import {InsertOneResult, ObjectId, UpdateResult} from "mongodb"
 
 export default class TagsController extends Controller {
     protected model: Tag
@@ -34,12 +34,17 @@ export default class TagsController extends Controller {
 
     public async create() {
         const body = await this.parseBody()
-        this.model = new Tag(body.name, 1)
-        if (await Tag.find(this.model.name))
-            this.respond(Status.Conflict, {message: `Tag ${this.model.name} already exists`})
-        else {
+        const found = await Tag.find(body.name)
+        console.log(found)
+        if (found) {
+            found.popularity++
+            this.model = found
+            const result = await this.model.save() as UpdateResult<Document>
+            this.respond(Status.Ok, {message: `Updated tag ${result.upsertedId ?? this.model.id}`})
+        } else {
+            this.model = new Tag(body.name, 1)
             const result = await this.model.save() as InsertOneResult<Document>
-            this.respond(Status.Created, {message: `Created tag ${result.insertedId}`})
+            this.respond(Status.Created, {message: `Created tag ${result.insertedId ?? this.model.id}`})
         }
     }
 
