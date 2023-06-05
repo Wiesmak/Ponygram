@@ -1,6 +1,6 @@
 import {IncomingMessage} from "http"
 import fs from "fs"
-import ApplicationConfig from "../config/application.ts"
+import ApplicationConfig from "../../config/application.ts"
 
 export default class File {
     data: Buffer
@@ -30,6 +30,9 @@ export default class File {
 
     async save(path: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
+            if (path.endsWith('jpg'))
+                path = path.replace('jpg', 'jpeg')
+
             fs.promises.writeFile(ApplicationConfig.FILE_STORAGE + path, this.data)
                 .then(() => resolve())
                 .catch(err => reject(err))
@@ -44,7 +47,7 @@ export default class File {
         })
     }
 
-    async read(path: string): Promise<File> {
+    static async read(path: string): Promise<File> {
         return new Promise<File>((resolve, reject) => {
             fs.promises.readFile(ApplicationConfig.FILE_STORAGE + path)
                 .then(data => resolve(new File(data)))

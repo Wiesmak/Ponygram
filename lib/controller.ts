@@ -161,4 +161,20 @@ export default abstract class Controller implements ControllerInterface {
             }
         })
     }
+
+    protected parseFileExtension(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const accept = this.req.headers['accept']
+            if (accept) {
+                const match = accept.match(/image\/(.+)/)
+                if (match) {
+                    resolve(match[1])
+                } else {
+                    reject('No file extension provided')
+                }
+            } else {
+                reject('No file extension provided')
+            }
+        })
+    }
 }

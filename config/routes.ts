@@ -40,6 +40,7 @@ export default function routes(): Router {
 
     router.namespace('files', () => {
         router.post('upload', { to: 'files#upload' })
+        router.get('get/:id', { to: 'files#download' })
     })
     //endregion
 
