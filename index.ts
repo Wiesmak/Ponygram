@@ -13,6 +13,24 @@ export const db = (await Database.connect()).db()
 const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
     colorLog(`Request received.`, Colors.fgGreen)
 
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204, {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Request-Method': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS, GET, POST, PATCH, PUT, DELETE',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Max-Age': '2592000',
+        })
+        res.end()
+        return
+    }
+
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Request-Method', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PATCH, PUT, DELETE')
+    res.setHeader('Access-Control-Allow-Headers', '*')
+    res.setHeader('Access-Control-Max-Age', '2592000')
+
     const {pathname} = new URL.URL(req.url, `http://${req.headers.host}`)
     const method = req.method.toUpperCase()
     colorLog(`GENERATING ROUTES TREE`, Colors.fgYellow)

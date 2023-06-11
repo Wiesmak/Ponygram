@@ -51,6 +51,10 @@ export default abstract class Controller implements ControllerInterface {
         this.res.statusCode = code
         this.res.writeHead(code, {
             ...(headers || {}),
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Request-Method': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS, GET, POST, PATCH, PUT, DELETE',
+            'Access-Control-Allow-Headers': '*',
             'content-type': 'application/json'
         })
         colorLog(`RESPOND ${code} ${data}`, (code >= 200 && code <= 208) ? Colors.fgGreen : Colors.fgRed)

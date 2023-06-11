@@ -54,10 +54,10 @@ export default class TagsController extends Controller {
     }
 
     @Authenticate()
-    public async delete(id: ObjectId) {
+    public async destroy(id: ObjectId) {
         this.model = await Tag.find(id)
         if (this.model) {
-            const result = await this.model.destroy()
+            await this.model.destroy()
             this.respond(Status.Ok, {message: `Deleted tag ${id}`})
         } else {
             this.respond(Status.NotFound, {message: `Tag ${id} not found`})

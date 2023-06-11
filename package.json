@@ -4,6 +4,7 @@
   "author": "Gerard Gajda",
   "version": "1.0.0",
   "type": "module",
+  "packageManager": "pnpm@7.16.1",
   "scripts": {
     "start": "ts-node index.ts",
     "dev": "nodemon index.ts"

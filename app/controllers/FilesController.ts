@@ -34,6 +34,11 @@ export default class FilesController extends Controller {
                 try {
                     const file = await File.read(`${id.toHexString() + suffix}.${type}`)
                     this.res.statusCode = Status.Ok
+                    this.res.setHeader('Access-Control-Allow-Origin', '*')
+                    this.res.setHeader('Access-Control-Request-Method', '*')
+                    this.res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PATCH, PUT, DELETE')
+                    this.res.setHeader('Access-Control-Allow-Headers', '*')
+                    this.res.setHeader('Access-Control-Max-Age', '2592000')
                     this.res.setHeader('Content-Type', `image/${type}`)
                     this.res.end(file.data)
                 } catch (err) {

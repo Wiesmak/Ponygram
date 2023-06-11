@@ -349,7 +349,7 @@ export default class Router {
         }
         for (const route of pathParts) {
             if (id !== null && route === pathParts.at(-1)) {
-                currentRoute = currentRoute === null
+                currentRoute = currentRoute == null
                     ? this.routes.find(r => r.path === `${route}/:id` && r.method === method)
                     : currentRoute.routes.find(r => r.path === `${route}/:id` && r.method === method)
                 continue

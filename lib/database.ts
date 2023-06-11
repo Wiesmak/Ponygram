@@ -8,9 +8,15 @@ export default class Database extends MongoClient {
         const connString = await Database.generateConnectionString(ApplicationConfig.DATABASE)
         const client = new Database(connString)
         colorLog(`Connecting to ${connString}`, Colors.fgWhite)
-        await client.connect()
-        colorLog(`Connected to database ${ApplicationConfig.DATABASE.database}`, Colors.fgGreen)
-        return client
+        try {
+            await client.connect()
+            colorLog(`Connected to database ${ApplicationConfig.DATABASE.database}`, Colors.fgGreen)
+            return client
+        } catch (e) {
+            colorLog(`Error connecting to database ${ApplicationConfig.DATABASE.database}`, Colors.fgRed)
+            process.exit(10)
+            return
+        }
     }
 
     public static async generateConnectionString(config: DatabaseConfig): Promise<string> {

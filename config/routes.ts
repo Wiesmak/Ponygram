@@ -37,17 +37,19 @@ export default function routes(): Router {
 
         router.get('picture', { to: 'profiles#getPicture' })
 
-        router.namespace('user', () => {
-            router.post('register', { to: 'users#create', as: 'register' })
-            router.post('login', { to: 'users#login', as: 'login' })
-            router.post('confirm', { to: 'users#confirm', as: 'confirm' })
-        })
-
         router.namespace('photos', () => {
             router.get('metadata/:id', { to: 'images#metadata', as: 'metadata' })
             router.patch('tags/:id', { to: 'imageTags#replace', as: 'imageTags' })
             router.resources('imageTags', { only: ['show', 'create', 'update', 'destroy'], as: 'tags' })
         })
+
+
+    })
+
+    router.namespace('user', () => {
+        router.post('register', { to: 'users#create', as: 'register' })
+        router.post('login', { to: 'users#login', as: 'login' })
+        router.post('confirm', { to: 'users#confirm', as: 'confirm' })
     })
 
     router.namespace('files', () => {

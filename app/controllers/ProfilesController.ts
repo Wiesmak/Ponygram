@@ -15,6 +15,7 @@ export default class ProfilesController extends Controller {
             this.respond(Status.Ok, {
                 username: user.username,
                 email: user.email,
+                id: token.id
             })
         } else {
             this.respond(Status.Unauthorized, { error: 'Unauthorized' })
@@ -65,6 +66,11 @@ export default class ProfilesController extends Controller {
                 const file = await File.read(`profile/${token.id}.${type}`)
                 this.res.statusCode = Status.Ok
                 this.res.setHeader('Content-Type', `image/${type}`)
+                this.res.setHeader('Access-Control-Allow-Origin', '*')
+                this.res.setHeader('Access-Control-Request-Method', '*')
+                this.res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PATCH, PUT, DELETE')
+                this.res.setHeader('Access-Control-Allow-Headers', '*')
+                this.res.setHeader('Access-Control-Max-Age', '2592000')
                 this.res.write(file.data)
                 this.res.end()
             } catch (err) {
