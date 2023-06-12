@@ -3,6 +3,8 @@ import User from "../models/User.ts"
 import Hash from "../../util/hash.ts"
 import Status from "../../util/status.ts"
 import Token from "../../util/token.ts"
+import Authenticate from "../../lib/authenticate.ts"
+import {ObjectId} from "mongodb"
 
 export default class UsersController extends Controller {
     model: User
@@ -42,6 +44,17 @@ export default class UsersController extends Controller {
             }
         } else {
             this.respond(Status.Unauthorized, {error: 'Invalid credentials'})
+        }
+    }
+
+    @Authenticate()
+    public async show(id: ObjectId) {
+        const user = await User.find(id)
+        if (user) {
+            const {username, email, profilePicture} = user
+            this.respond(Status.Ok, {username, email, profilePicture})
+        } else {
+            this.respond(Status.NotFound, {error: 'User not found'})
         }
     }
 

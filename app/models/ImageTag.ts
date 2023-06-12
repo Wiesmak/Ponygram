@@ -8,6 +8,7 @@ export default class ImageTag extends Image {
         id: ObjectId,
         album: string,
         originalName: string,
+        author: ObjectId,
         url: string,
         lastChange: Status,
         history: History[],
@@ -16,6 +17,7 @@ export default class ImageTag extends Image {
         super(
             album,
             originalName,
+            author,
             url,
             lastChange,
             history,
@@ -26,6 +28,6 @@ export default class ImageTag extends Image {
 
     public static async find(id: ObjectId): Promise<ImageTag> {
         const entity = await db.collection('images').findOne({_id: id})
-        return entity ? new this(entity._id, entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity.tags) : null
+        return entity ? new this(entity._id, entity.album, entity.originalName, entity.author, entity.url, entity.lastChange, entity.history, entity.tags) : null
     }
 }

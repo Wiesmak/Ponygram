@@ -47,6 +47,7 @@ export default function routes(): Router {
     })
 
     router.namespace('user', () => {
+        router.get('info/:id', { to: 'users#show', as: 'info' })
         router.post('register', { to: 'users#create', as: 'register' })
         router.post('login', { to: 'users#login', as: 'login' })
         router.post('confirm', { to: 'users#confirm', as: 'confirm' })

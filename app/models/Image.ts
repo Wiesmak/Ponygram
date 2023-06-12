@@ -11,6 +11,7 @@ export default class Image extends Model {
     constructor(
         public album: string,
         public originalName: string,
+        public author: ObjectId,
         public url: string,
         public lastChange?: Status,
         public history?: History[],
@@ -22,12 +23,12 @@ export default class Image extends Model {
 
     public static async find(id: ObjectId): Promise<Image> {
         const entity = await db.collection('images').findOne({_id: id})
-        return entity ? new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity.tags, entity._id) : null
+        return entity ? new this(entity.album, entity.originalName, entity.author, entity.url, entity.lastChange, entity.history, entity.tags, entity._id) : null
     }
 
     public static async all(): Promise<Image[]> {
         const entities = await db.collection('images').find().toArray()
-        return entities.map(entity => new this(entity.album, entity.originalName, entity.url, entity.lastChange, entity.history, entity.tags, entity._id))
+        return entities.map(entity => new this(entity.album, entity.originalName, entity.author, entity.url, entity.lastChange, entity.history, entity.tags, entity._id))
     }
 
     protected async getImage(): Promise<Sharp> {

@@ -5,7 +5,7 @@ import {InsertOneResult, ObjectId} from "mongodb"
 import Timestamp from "../../lib/timestamp.ts"
 import sharp from "sharp"
 import ApplicationConfig from "../../config/application.ts"
-import {Filter} from "../../util/types"
+import {Filter, TokenPayload} from "../../util/types"
 import Authenticate from "../../lib/authenticate.ts"
 
 export default class ImagesController extends Controller {
@@ -34,10 +34,10 @@ export default class ImagesController extends Controller {
         }
     }
 
-    @Authenticate()
-    public async create() {
+    @Authenticate({returnUser: true})
+    public async create(token: TokenPayload) {
         const body = await this.parseBody()
-        this.model = new Image(body.album, body.originalName, null, "original",
+        this.model = new Image(body.album, body.originalName, new ObjectId(token.id), null, "original",
             [
                 {
                     status: "original",
