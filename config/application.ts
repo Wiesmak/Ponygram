@@ -45,7 +45,7 @@ export default class ApplicationConfig {
      * }
      */
     static DATABASE: DatabaseConfig = {
-        host: '127.0.0.1',
+        host: '172.17.0.2',
         port: 27017,
         user: null,
         password: null,
