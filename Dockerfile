@@ -41,6 +41,7 @@ COPY --from=prerelease /usr/src/app/util/ util/
 COPY --from=prerelease /usr/src/app/package.json .
 COPY --from=prerelease /usr/src/app/pnpm-lock.yaml .
 COPY --from=prerelease /usr/src/app/tsconfig.json .
+COPY --from=prerelease /usr/src/app/.swcrc .
 
 # run the app
 USER node
